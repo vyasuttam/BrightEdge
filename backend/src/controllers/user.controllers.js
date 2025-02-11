@@ -45,23 +45,12 @@ export async function signupUser(req, res){
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        let image_url = "";
-
-        console.log("error before upload");
-
-        console.log(req.file);
-
-        if (req.file && req.file.path) {
-            image_url = await uploadToCloudinary(req.file.path, "profile_pictures");
-        }
-
-        console.log("error after upload");
 
         const createdUser = await user.create({
             full_name: full_name,
             email: email,
             password: hashedPassword,
-            profile_url:image_url
+            profile_url:""
         });
 
         const created_role = await userRoles.create({
@@ -346,6 +335,134 @@ export const getProfileInfo = async (req, res) => {
             error:"error while getting info",
             status:400,
         })
+    }
+
+}
+
+export const handleProfilePictureUpload = async (req, res) => {
+
+    try {
+
+        let image_url = "";
+
+        console.log("error before upload");
+
+        console.log(req.file);
+
+        if (req.file && req.file.path) {
+            image_url = await uploadToCloudinary(req.file.path, "profile_pictures");
+        }
+
+        if(image_url)
+        {
+            const updatedUser = await user.updateOne({ _id: req.user_id }, 
+                { 
+                    $set: { 
+                        profile_url: image_url 
+                    }    
+                });
+
+            if(updatedUser){
+                return res.status(200).json({
+                    status:200,
+                    message:"profile picture updated successfully",
+                    imageUrl:image_url
+                });
+            }
+        }
+
+
+    } catch (error) {
+        
+        console.log(error);
+
+        return res.status(400).json({
+            error:"error while uploading profile picture",
+            status:400,
+        })
+
+    }
+
+
+}
+
+export const handleChangePassword = async (req, res) => {
+
+    try {
+
+        const { oldPassword, newPassword } = req.body;
+
+        const dbUser = await user.findOne({
+            _id: req.user_id
+        });
+
+        const isPasswordValid = await bcrypt.compare(oldPassword, dbUser.password);
+
+        if(!isPasswordValid){
+            throw new ApiErrorResponse(400, "old password is wrong");
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        const updatedUser = await user.updateOne({ _id: req.user_id }, 
+            { 
+                $set: { 
+                    password: hashedPassword 
+                }    
+            });
+
+        if(updatedUser){
+
+            console.log('password changed success');
+
+            return res.status(200).json({
+                status:200,
+                message:"password updated successfully",
+            });
+        }
+        
+    } catch (error) {
+        
+        console.log(error);
+
+        return res.status(400).json({
+            error:error.message || "error while updating password",
+            status:400,
+        })
+
+    }
+
+}
+
+export const handleProfileUpdate = async (req, res) => {
+
+    try {
+        
+        const { full_name } = req.body;
+
+        const updatedUser = await user.updateOne({ _id: req.user_id }, 
+            { 
+                $set: { 
+                    full_name: full_name,
+                }    
+            });
+
+        if(updatedUser){
+            return res.status(200).json({
+                status:200,
+                message:"profile updated successfully",
+            });
+        }
+
+    } catch (error) {
+        
+        console.log(error);
+
+        return res.status(400).json({
+            error:"error while updating profile",
+            status:400,
+        })
+
     }
 
 }

@@ -4,7 +4,7 @@ import { IoSearch } from "react-icons/io5";
 export const Navbar = () => {
 
   return (
-    <nav className='p-4 shadow-md flex justify-center box-border'>
+    <nav className='p-4 flex justify-center box-border z-10 shadow-gray-400'>
       <div className='container flex items-center lg:w-9/12'>
         <div className='logo mx-4'>
             <h1>Logo</h1>
