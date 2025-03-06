@@ -8,6 +8,8 @@ import { AuthProvider } from './context/AuthContext'
 import { ProtectedRoute } from './utils/ProtectedRoute'
 import { RootLayout } from './layout/RootLayout'
 import DashboardPage from './pages/Dashboardpage'
+import { Coursepage } from './pages/Coursepage'
+import { CourseDetailPage } from './pages/CourseDetailPage'
 
 function App() {
 
@@ -23,7 +25,9 @@ function App() {
                 path='/home' 
                 element={
                   <ProtectedRoute>
-                    <Home />
+                    <RootLayout>
+                      <Home />
+                    </RootLayout>
                 </ProtectedRoute>
                 } />
                 <Route 
@@ -32,6 +36,25 @@ function App() {
                     <ProtectedRoute>
                       <RootLayout>
                         <DashboardPage />
+                      </RootLayout>
+                    </ProtectedRoute>
+                  } />
+
+                <Route 
+                  path='/courses' 
+                  element={
+                    <ProtectedRoute>
+                      <RootLayout>
+                        <Coursepage />
+                      </RootLayout>
+                    </ProtectedRoute>
+                  } />
+                <Route 
+                  path='/courses/:course_id' 
+                  element={
+                    <ProtectedRoute>
+                      <RootLayout>
+                        <CourseDetailPage />
                       </RootLayout>
                     </ProtectedRoute>
                   } />
