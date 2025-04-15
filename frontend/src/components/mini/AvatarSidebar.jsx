@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const AvatarSidebar = ({ profile_url }) => {
 
@@ -25,8 +26,11 @@ export const AvatarSidebar = ({ profile_url }) => {
             const response = await axios.post('http://localhost:8080/api/user/uploadProfilePicture', formData, {
                 withCredentials: true,
             });
+
+            console.log(response);
             
             if (response.status === 200) {
+                toast.success("Profile Uploaded success");
                 setIsOpen(false);
             }
         } catch (error) {
@@ -39,7 +43,7 @@ export const AvatarSidebar = ({ profile_url }) => {
   return (
     <>
         <button 
-            className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg w-full text-lg"
+            className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg w-full h-10 flex items-center justify-center text-lg"
             onClick={() => setIsOpen(true)}
             >
             Upload Photo

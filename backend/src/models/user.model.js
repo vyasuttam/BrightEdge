@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
     verified:{
         type:Boolean,
         default:false
-    }
+    },
 
 }, {
     timestamps:true
@@ -42,10 +42,22 @@ const userRolesSchema = new mongoose.Schema({
         type:String,
         enum:["student", "instructor"],
         default:"student",
+    },
+    identityNumber : {
+        type:String,
+        default:""
+    },
+    work_experience : {
+        type:String,
+        default:""
+    },
+    qualification_doc : {
+        type:String,
+        default:""
     }
 }, {
     timestamps:true
-}); 
+});
 
 export const user = mongoose.model('user', UserSchema);
 export const userRoles = mongoose.model('user_roles', userRolesSchema);

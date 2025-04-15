@@ -1,78 +1,160 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { RoleContext } from "../context/RoleContext";
 import { Dashboard } from "../components/Dashboard.jsx";
 import { EnrolledCourse } from "../components/EnrolledCourse.jsx";
 import { MyProfile } from "../components/MyProfile.jsx";
-import { OrderHistory } from "../components/OrderHistory.jsx";
+import { UserExams } from "../components/UserExams.jsx";
+import { MyCourses } from "../components/MyCourses.jsx";
+import { MyExams } from "../components/MyExams.jsx";
+import { useNavigate } from "react-router-dom";
+import IdentityModal from "../components/mini/IdentityModal.jsx";
+import { FaTachometerAlt, FaUser, FaBookOpen, FaClipboardList, FaChalkboardTeacher, FaBook, FaClipboardCheck, FaUserGraduate, FaUsers, FaMoneyBillWave } from "react-icons/fa";
+import { MdLock } from "react-icons/md";
 
 const DashboardPage = () => {
+  const [option, setOption] = useState(localStorage.getItem('lastSelectedTab') || "dashboard");
+  const { role } = useContext(RoleContext);
+  const navigate = useNavigate();
 
-    const [option, setOption] = useState("dashboard");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [aadharNumber, setAadharNumber] = useState("");
+
+  // Persist last selected tab in localStorage
+  useEffect(() => {
+    localStorage.setItem('lastSelectedTab', option);
+  }, [option]);
 
   return (
-    
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg p-4">
-        <ul className="space-y-3">
-            <li 
-                className={`p-2 rounded cursor-pointer ${option === "dashboard" ? "bg-blue-500 text-white" : "bg-white text-black"}`}
-                onClick={() => setOption("dashboard")}>Dashboard</li>
-            <li 
-                className={`p-2 rounded cursor-pointer ${option === "myprofile" ? "bg-blue-500 text-white" : "bg-white text-black"}`}
-                onClick={() => setOption("myprofile")}>My Profile</li>
-            <li 
-                className={`p-2 rounded cursor-pointer ${option === "enrolled_courses" ? "bg-blue-500 text-white" : "bg-white text-black"}`}
-                onClick={() => setOption("enrolled_courses")}>Enrolled Courses</li>
-            <li 
-                className={`p-2 rounded cursor-pointer ${option === "order_history" ? "bg-blue-500 text-white" : "bg-white text-black"}`}
-                onClick={() => setOption("order_history")}>Order History</li>
-          <li className="mt-4 font-bold">Instructor</li>
-          <li className="p-2 hover:bg-gray-200 rounded">My Courses</li>
-        </ul>
-      </aside>
-      
-      {/* Main Content */}
-      <main className="flex-1 p-6">
-        <div>
-            {
-                option == "dashboard" && <Dashboard />
-            }
-            {
-                option == "myprofile" && <MyProfile />
-            }
-            {
-                option == "enrolled_courses" && <EnrolledCourse />
-            }
-            {
-                option == "order_history" && <OrderHistory />
-            }
+      <aside className="w-64 bg-gray-900 text-gray-300 flex flex-col">
+        <div className="p-4 border-b border-gray-700 font-bold text-lg text-white flex px-14">
+        <img src="/BrightEdge.png" alt="Logo" className="h-5" />
         </div>
+        <ul className="flex-1 p-4 space-y-2">
+          <li
+            className={`p-3 rounded-lg cursor-pointer ${
+              option === "dashboard" ? "bg-blue-600 text-white font-semibold" : "hover:bg-gray-800"
+            }`}
+            onClick={() => setOption("dashboard")}
+          >
+            <FaTachometerAlt className="mr-3 inline-block" /> Dashboard
+          </li>
 
-        {/* Stats Grid */}
+          <li
+            className={`p-3 rounded-lg cursor-pointer ${
+              option === "myprofile" ? "bg-blue-600 text-white font-semibold" : "hover:bg-gray-800"
+            }`}
+            onClick={() => setOption("myprofile")}
+          >
+            <FaUser className="mr-3 inline-block" /> My Profile
+          </li>
 
+          <li
+            className={`p-3 rounded-lg cursor-pointer ${
+              option === "enrolled_courses" ? "bg-blue-600 text-white font-semibold" : "hover:bg-gray-800"
+            }`}
+            onClick={() => setOption("enrolled_courses")}
+          >
+            <FaBookOpen className="mr-3 inline-block" /> Enrolled Courses
+          </li>
+
+          <li
+            className={`p-3 rounded-lg cursor-pointer ${
+              option === "user_exams" ? "bg-blue-600 text-white font-semibold" : "hover:bg-gray-800"
+            }`}
+            onClick={() => setOption("user_exams")}
+          >
+            <FaClipboardList className="mr-3 inline-block" /> User Exams
+          </li>
+
+          <li className="mt-6 text-xs text-gray-500 uppercase tracking-wider">Instructor</li>
+
+          {role === "instructor" ? (
+            <>
+              <li
+                className={`p-3 rounded-lg cursor-pointer ${
+                  option === "my_courses" ? "bg-blue-600 text-white font-semibold" : "hover:bg-gray-800"
+                }`}
+                onClick={() => setOption("my_courses")}
+              >
+                <FaChalkboardTeacher className="mr-3 inline-block" /> My Courses
+              </li>
+              <li
+                className={`p-3 rounded-lg cursor-pointer ${
+                  option === "my_exams" ? "bg-blue-600 text-white font-semibold" : "hover:bg-gray-800"
+                }`}
+                onClick={() => setOption("my_exams")}
+              >
+                <FaClipboardList className="mr-3 inline-block" /> My Exams
+              </li>
+            </>
+          ) : (
+            <>
+              <li
+                className="p-3 rounded-lg bg-gray-800 text-gray-500 flex items-center gap-2 cursor-not-allowed"
+                title="Upgrade to Instructor to access"
+              >
+                <MdLock size={16} /> My Courses
+              </li>
+              <li
+                className="p-3 rounded-lg bg-gray-800 text-gray-500 flex items-center gap-2 cursor-not-allowed"
+                title="Upgrade to Instructor to access"
+              >
+                <MdLock size={16} /> My Exams
+              </li>
+
+              {/* Upgrade button */}
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="w-full mt-4 p-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition"
+              >
+                Upgrade Account
+              </button>
+            </>
+          )}
+        </ul>
+
+        {/* Action buttons */}
+        <div className="p-4 border-t border-gray-700 space-y-2">
+          <button
+            onClick={() => navigate("/")}
+            className="w-full p-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center transition"
+          >
+            Home
+          </button>
+
+          <button
+            onClick={() => navigate("/login")}
+            className="w-full p-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition"
+          >
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-6 overflow-y-auto">
+        <div>
+          {option === "dashboard" && <Dashboard />}
+          {option === "myprofile" && <MyProfile />}
+          {option === "enrolled_courses" && <EnrolledCourse />}
+          {option === "user_exams" && <UserExams />}
+          {option === "my_courses" && role === "instructor" && <MyCourses />}
+          {option === "my_exams" && role === "instructor" && <MyExams />}
+        </div>
       </main>
+
+      {/* Upgrade Modal */}
+      {isModalOpen && (
+        <IdentityModal
+          aadharNumber={aadharNumber}
+          setAadharNumber={setAadharNumber}
+          setIsOpen={setIsModalOpen}
+        />
+      )}
     </div>
   );
 };
 
 export default DashboardPage;
-
-
-{/* <div className="grid grid-cols-3 gap-6">
-{[
-  { label: "Enrolled Courses", count: 1, icon: "📖" },
-  { label: "Active Courses", count: 1, icon: "🎓" },
-  { label: "Completed Courses", count: 0, icon: "🏆" },
-  { label: "Total Students", count: 2, icon: "👨‍🎓" },
-  { label: "Total Courses", count: 11, icon: "📦" },
-  { label: "Total Earnings", count: "$0.00", icon: "💰" }
-].map((item, index) => (
-  <div key={index} className="bg-white p-6 rounded-lg shadow-lg flex items-center">
-    <span className="text-3xl mr-4">{item.icon}</span>
-    <div>
-      <p className="text-2xl font-bold">{item.count}</p>
-      <p className="text-gray-600">{item.label}</p>
-    </div>
-  </div>
-))}
-</div> */}

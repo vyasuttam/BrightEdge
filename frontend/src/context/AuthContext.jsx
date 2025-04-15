@@ -26,7 +26,7 @@ const AuthProvider = ({ children }) => {
             else 
             {
                 setUser(null);
-            }
+            }   
 
         } catch (err) {
             setUser(null);
@@ -59,6 +59,5 @@ const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   )
 }
-
 
 export { AuthProvider, AuthContext };

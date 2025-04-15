@@ -10,6 +10,10 @@ const sectionSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:'course',
         required:true
+    },
+    section_number: {
+        type: Number,  // Determines the order of sections
+        required: true
     }
 
 }, {
@@ -34,10 +38,6 @@ const sectionContentSchema = new Schema({
         type:Number,
         required:true
     },
-    is_preview:{
-        type:Boolean,
-        required:true
-    },
     duration:{
         type:Number,
     },
@@ -51,5 +51,5 @@ const sectionContentSchema = new Schema({
     timestamps:true
 });
 
-export const section = mongoose.model('section', sectionSchema);
-export const section_content = mongoose.model('section_content', sectionContentSchema);
+export const Section = mongoose.model('section', sectionSchema);
+export const Section_content = mongoose.model('section_content', sectionContentSchema);

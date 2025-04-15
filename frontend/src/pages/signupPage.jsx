@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaRegEyeSlash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
+import { toast } from 'react-toastify';
 
 // Signup form component
 
@@ -59,6 +60,7 @@ export const SignupPage = () => {
         const response = await axios.post('http://localhost:8080/api/user/signup', formData);
 
         if(response.data.status == 201){
+          toast.success("signed up successfully")
           router('/verifyPage', { state : { email : formData.email, origin:'signup' }  });
         }
         

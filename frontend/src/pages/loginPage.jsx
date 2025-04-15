@@ -1,10 +1,11 @@
-import React,{ useContext, useState } from 'react'
+import React,{ useContext, useState } from 'react';
 import { z } from 'zod';
-import axios  from 'axios';
+import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaRegEyeSlash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
 import { AuthContext } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email format').min(1, 'Email is required'),
@@ -13,7 +14,6 @@ const loginSchema = z.object({
 });
 
 export const LoginPage = () => {
-    
   const router = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -30,57 +30,50 @@ export const LoginPage = () => {
   const { setUser } = useContext(AuthContext);
 
   const [passwordVisibility, setPasswordVisibility] = useState(false);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
-
     const { name, value } = e.target;
-    
-    setFormData((prevData) => 
-        ({
-            ...prevData,
-            [name]: value
-        })
-    );
-
-    console.log(formData);
-
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-
     try {
-        
-        const response = await axios.post('http://localhost:8080/api/user/login', formData, {
-          withCredentials: true
-        });
+      const response = await axios.post('http://localhost:8080/api/user/login', formData, {
+        withCredentials: true
+      });
 
-        if(response.data?.isVerified == false){
-          router('/verifyPage', { state: { email : formData.email } })
-          return ;
-        }
+      if (response.data?.isVerified == false) {
+        router('/verifyPage', { state: { email: formData.email } });
+        return;
+      }
 
-        console.log(response.data);
-
-        alert('Login Successfull');
-
-        setUser(response.data.userData);
-        
-        React.lazy(router('/home'));
-
-        console.log(response);
-
-    } catch (error) 
-    {    
-        console.log(error);
+      toast.success("Logged in Successfully");
+      setUser(response.data.userData);
+      React.lazy(router('/'));
+    } catch (error) {
+      toast.warning(error.message);
+      console.log(error);
     }
+  };
 
+  const handleSendMail = async () => {
+  
+    try {
+      const response = await axios.post('http://localhost:8080/api/user/forget-password-request', { email: formData.email });
+      toast.success("Email is sent successfully");
+      setMessage(response.data.message);
+    } catch (error) {
+      toast.warning(error.message);
+      console.log(error);
+    }
+    
   }
-
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -89,7 +82,6 @@ export const LoginPage = () => {
         {message && <div className="text-green-500 mb-4 text-center">{message}</div>}
 
         <form onSubmit={handleSubmit}>
-
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
@@ -112,14 +104,9 @@ export const LoginPage = () => {
             </label>
             <div className='relative'>
               {
-                passwordVisibility ? <FaRegEyeSlash 
-                 className='absolute right-3 top-3'
-                 onClick={() => setPasswordVisibility(!passwordVisibility)}
-                /> :
-                <IoMdEye 
-                  className='absolute right-3 top-3'
-                  onClick={() => setPasswordVisibility(!passwordVisibility)}
-                />
+                passwordVisibility
+                  ? <FaRegEyeSlash className='absolute right-3 top-3' onClick={() => setPasswordVisibility(!passwordVisibility)} />
+                  : <IoMdEye className='absolute right-3 top-3' onClick={() => setPasswordVisibility(!passwordVisibility)} />
               }
               <input
                 type={passwordVisibility ? 'text' : 'password'}
@@ -129,9 +116,15 @@ export const LoginPage = () => {
                 onChange={handleChange}
                 placeholder="Enter your password"
                 className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
+              />
+            </div>
             {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+          </div>
+
+          <div className="text-right mb-4">
+            <p onClick={() => handleSendMail()} to="/reset-password" className="text-sm text-blue-600 hover:underline cursor-pointer">
+              Forgot Password?
+            </p>
           </div>
 
           <button
@@ -139,11 +132,14 @@ export const LoginPage = () => {
             className="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Loginin ...' : 'login'}
+            {isSubmitting ? 'Logging in...' : 'Login'}
           </button>
         </form>
-        <p className='m-2 text-center'>Don't have an Account? <span className='text-blue-600'><Link to="/signup">Sign Up</Link></span></p>
+
+        <p className='m-2 text-center'>
+          Don't have an Account? <span className='text-blue-600'><Link to="/signup">Sign Up</Link></span>
+        </p>
       </div>
     </div>
   );
-}
+};

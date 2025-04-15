@@ -22,15 +22,18 @@ const courseSchema = new Schema({
         type:Number,
         required:true
     },
-    category_id:{
-        type:mongoose.Schema.ObjectId,
-        ref:"course_category",
+    categories:{
+        type:Array,
         required:true
     },
     instructor_id:{
         type:Schema.Types.ObjectId,
         ref:'user',
         required:true
+    },
+    content_count : {
+        type:Number,
+        default:0
     }
 
 }, {

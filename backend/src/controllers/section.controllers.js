@@ -1,11 +1,12 @@
-import { section } from "../models/section.model.js";
+import { Section } from "../models/section.model.js";
 
 export async function addSection(req, res) {
 
     try 
-    {
-        
-        const { course_id, section_name } = req.body;
+    {   
+        const { course_id, section_name, section_number } = req.body;
+
+        console.log(req.body);
         
         if(!course_id){
             throw new Error("course id is required");
@@ -15,9 +16,10 @@ export async function addSection(req, res) {
             throw new Error("section name is required");
         }
 
-        await section.create({
+        await Section.create({
             course_id: course_id,
-            section_name: section_name
+            section_name: section_name,
+            section_number: section_number
         });
 
         return res.status(201).json({
@@ -26,7 +28,7 @@ export async function addSection(req, res) {
 
     } catch (error) {
         return res.status(400).json({
-            error,
+            error: error.message,
             message: "this is errorr"
         });
     }
@@ -44,7 +46,7 @@ export async function getSections(req, res) {
             throw new Error("course id is required");
         }
 
-        const courseData = await section.aggregate([
+        const courseData = await Section.aggregate([
             {
                 $match:{
                     course_id: course_id
@@ -53,7 +55,7 @@ export async function getSections(req, res) {
             {
                 $lookup:{
                     from:"section_contents", // section content join
-                    localfeild:"_id", // section id
+                    localfield:"_id", // section id
                     foreignField:"section_id",
                     as:"course_content"
                 }
@@ -76,7 +78,38 @@ export async function getSections(req, res) {
 
 
     } catch (error) {
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
+    }
+
+}
+
+export const getSectionData = async (req, res) => {
+
+    try 
+    {
+        
+        const { course_id } = req.body;
+
+        if(!course_id){
+            throw new Error("course id is required");
+        }
+
+        const sectionData = await Section.find({
+            course_id: course_id
+        });
+
+        if(!sectionData){
+            throw new Error("no section found");
+        }
+
+        return res.status(200).json({
+            message: "section data",
+            data: sectionData
+        });
+    }
+    catch(error)
+    {
+        return res.status(400).json(error.message);
     }
 
 }
