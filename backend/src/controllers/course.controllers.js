@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { courses } from '../models/course.model.js';
+import { course_categories, courses } from '../models/course.model.js';
 import mongoose from 'mongoose';
 import { deletefromCloudinary, uploadToCloudinary } from '../config/cloudinary.js';
 import { Enrollment } from '../models/enrollment.model.js';
@@ -44,7 +44,7 @@ export async function addCouse(req, res) {
 
         console.log('data parsed');
 
-        const cloudinaryThumbnail = await uploadToCloudinary(course_thumbnail[0].path, "Thumbnails");
+        const cloudinaryThumbnail = await uploadToCloudinary(course_thumbnail[0].path, "Thumbnails", "image");
         const cloudinaryIntro = await uploadToCloudinary(course_intro[0].path, "Introduction_video");
 
         console.log("uploaded to cloud");
@@ -80,7 +80,7 @@ export async function addCouse(req, res) {
 
 }
 
-export const updateCourse = async(req, res) => {
+export const updateCourse = async (req, res) => {
 
     try
     {
@@ -573,6 +573,30 @@ export const getCourseEnrollmentInfo = async (req, res) => {
             success : false,
             message : "enrollment fetching failed"
         });
+    }
+
+}
+
+export const handleCategorySend = async (req, res) => {
+
+
+    try
+    {
+
+        const course_category = await course_categories.find({});
+
+        return res.status(200).json({
+            success : false,
+            categories : course_category
+        });
+
+    }
+    catch(error)
+    {
+        return res.status(400).json({
+            success: false,
+            message : "no exist"
+        })
     }
 
 }

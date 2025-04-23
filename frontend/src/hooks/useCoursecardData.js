@@ -32,7 +32,8 @@ export function useCourseCardData() {
 
         
         console.log("inside instructor")
-        instructorCourses = instructorCoursesResponse.data.data;
+        instructorCourses = instructorCoursesResponse.data.data;        
+
         instructorCourseIds = new Set(instructorCourses.map(c => c._id));
       }
 

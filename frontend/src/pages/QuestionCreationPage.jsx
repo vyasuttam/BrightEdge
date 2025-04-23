@@ -26,30 +26,38 @@ export const QuestionCreationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { question, options, answer } = questionData;
-
+  
     if (!examId) {
       toast.error("Exam ID is invalid.");
       return;
     }
+  
     if (!question || !answer || options.some(opt => !opt)) {
       toast.error("Please fill out all fields.");
       return;
     }
-    if (!options.includes(answer)) {
-      toast.error("Correct answer must match one of the options.");
+  
+    // Check for duplicate options
+    const uniqueOptions = new Set(options.map(opt => opt.trim().toLowerCase()));
+    if (uniqueOptions.size !== options.length) {
+      toast.error("Options must be unique.");
       return;
     }
-
+  
+    // Check if answer matches one of the options (case-insensitive)
+    const normalizedAnswer = answer.trim().toLowerCase();
+    if (!uniqueOptions.has(normalizedAnswer)) {
+      toast.error("Correct answer must exactly match one of the options.");
+      return;
+    }
+  
     try {
       if (isEditing !== null) {
-        await axios.put(`http://localhost:8080/api/exam/update-exam-question`, {
-          question_id: isEditing,
-          question,
-          options,
-          answer
-        }, {
-          withCredentials: true,
-        });
+        await axios.put(
+          `http://localhost:8080/api/exam/update-exam-question`,
+          { question_id: isEditing, question, options, answer },
+          { withCredentials: true }
+        );
         toast.success("Question updated successfully!");
       } else {
         await axios.post(
@@ -59,7 +67,7 @@ export const QuestionCreationPage = () => {
         );
         toast.success("Question added successfully!");
       }
-
+  
       fetchQuestions();
       setQuestionData({ question: '', options: ['', '', '', ''], answer: '' });
       setIsEditing(null);
@@ -68,6 +76,7 @@ export const QuestionCreationPage = () => {
       toast.error("An error occurred while submitting the question.");
     }
   };
+  
 
   const fetchQuestions = async () => {
     try {

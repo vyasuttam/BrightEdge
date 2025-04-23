@@ -10,7 +10,7 @@ export const EnrolledCourse = () => {
       const res = await axios.get("http://localhost:8080/api/course/getEnrolledCourses", {
         withCredentials: true,
       });
-
+      console.log(res);
       setCourses(res.data.data);
     } catch (error) {
       console.log(error);

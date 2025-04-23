@@ -24,12 +24,32 @@ const CourseUpdateForm = () => {
     course_intro_link: "",
   });
 
+    const loadCategory = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/api/course/loadCategory", {
+          withCredentials: true,
+        });
+        
+        console.log(res.data);
+
+        if (res.data.categories) {
+          const categoryNames = res.data.categories.map((cat) => cat.category_name);
+          setSelectedCategories(categoryNames);
+        } else {
+          console.error("No categories found");
+        }
+      } catch (error) {
+        console.error("Failed to load categories", error);
+      }
+    };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(`http://localhost:8080/api/course/getCourseData?course_id=${courseId}`, {
           withCredentials: true,
         });
+        
         const course = res.data.data[0];
 
         setCourseData((prev) => ({
@@ -40,13 +60,16 @@ const CourseUpdateForm = () => {
           course_thumbnail_link: course.thumbnail,
           course_intro_link: course.introductry_video,
         }));
-        setSelectedCategories(course.categories);
+
+       setSelectedCategories(course.categories)
+
       } catch (err) {
         toast.error("Failed to load course details");
       }
     };
 
     fetchData();
+    loadCategory();
   }, [courseId]);
 
   const handleThumbnailChange = (e) => {

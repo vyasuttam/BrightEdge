@@ -20,6 +20,9 @@ export const CourseDetailPage = () => {
       });
 
       const data = response.data.data[0];
+
+      console.log(response);
+
       setCourseData(data);
       setIsEnrolled(data.isEnrolled);
       setCategories(data.categories.join(", "));

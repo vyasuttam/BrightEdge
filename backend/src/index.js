@@ -29,7 +29,7 @@ app.use("/api/course", courseRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/exam", examRouter);
 
-app.use("/api/admin", adminRouter)
+app.use("/api/admin", adminRouter);
 
 connectToDB()
 .then((res) => {

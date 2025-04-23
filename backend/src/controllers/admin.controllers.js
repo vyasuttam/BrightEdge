@@ -3,9 +3,12 @@ import bcrypt from 'bcrypt';
 import { generateAccessToken } from "./user.controllers.js";
 import { user, userRoles } from "../models/user.model.js";
 import { courses } from "../models/course.model.js";
-import { Exam } from "../models/exam.model.js"
+import { Exam, ExamEnrollment, ExamResult, UserAnswers } from "../models/exam.model.js"
 import jwt from "jsonwebtoken";
 import { UserProgress } from "../models/progress.model.js";
+import { Enrollment } from "../models/enrollment.model.js";
+import { Order } from "../models/order.model.js";
+import { otpModel } from "../models/otp.model.js";
 
 export const adminlogin = async (req, res) => {
   try {
@@ -139,6 +142,11 @@ export const getUsers = async (req, res) => {
 
     const tempUserRoles = await userRoles.find({}).populate("user_id");
 
+    if(!tempUserRoles) {
+      return res.status(400).json({
+        message : "user not defined"
+      })
+    }
     // console.log(tempUserRoles);
 
     const formattedUsers = tempUserRoles.map((userRole) => ({
@@ -181,6 +189,42 @@ export const deleteUser = async (req, res) => {
 
     await userRoles.deleteOne({
       user_id: user_id
+    });
+
+    await courses.deleteMany({
+      instructor_id : user_id
+    });
+
+    await Enrollment.deleteMany({
+      student_id : user_id
+    });
+
+    await Order.deleteMany({
+      user_id : user_id
+    });
+
+    await ExamEnrollment.deleteMany({
+      user_id : user_id
+    });
+
+    await Exam.deleteMany({
+      user_id : user_id
+    });
+
+    await ExamResult.deleteMany({
+      user_id : user_id
+    });
+
+    await otpModel.deleteMany({
+      user_id : user_id
+    });
+
+    await UserProgress.deleteMany({
+      user_id : user_id
+    });
+
+    await UserAnswers.deleteMany({
+      user_id : user_id
     });
 
     return res.status(200).json({

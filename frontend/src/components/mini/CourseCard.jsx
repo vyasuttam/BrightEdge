@@ -11,6 +11,10 @@ export default function CourseCard({
 }) {
   const [latestEnrolled, setLatestEnrolled] = useState(isEnrolled);
 
+  
+  console.log(course);
+  console.log(course.instructor_name, course.instructor_id.full_name);
+
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this course?")) {
       onDelete(course._id);
@@ -69,7 +73,7 @@ export default function CourseCard({
         <p className="text-sm text-gray-600">
           By{" "}
           <span className="font-medium text-gray-800">
-            {course.instructor_name || course.instructor_id.full_name}
+            {course.instructor_id.full_name || course.instructor_name || "" }
           </span>
         </p>
 

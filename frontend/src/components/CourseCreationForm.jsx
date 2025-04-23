@@ -35,8 +35,13 @@ const CourseCreationForm = () => {
     const file = e.target.files[0];
     if (file) {
       setCourseData({ ...courseData, course_intro: file });
+    
     }
+
   };
+
+  
+
 
   const handleCreate = async () => {
 
@@ -69,6 +74,7 @@ const CourseCreationForm = () => {
         });
         
         toast.success("Course Created Successfully");
+        
 
         console.log(res.data);
     }

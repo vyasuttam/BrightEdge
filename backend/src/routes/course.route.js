@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyJWT } from "../middleware/verifyJWT.js";
-import { getCourseCertificateData, getCourseData, getCourses, getCourseStatus, getSearchedCourses } from "../controllers/course.controllers.js";
+import { getCourseCertificateData, getCourseData, getCourses, getCourseStatus, getSearchedCourses, handleCategorySend } from "../controllers/course.controllers.js";
 import { getUserProgress, updateCourseProgress } from "../controllers/progress.controllers.js";
 import { getEnrolledCourses, studentEnrollment } from "../controllers/enrollment.controllers.js";
 
@@ -22,3 +22,4 @@ courseRouter.get('/', getSearchedCourses);
 
 courseRouter.get('/course-certificate-data', verifyJWT, getCourseCertificateData);
 
+courseRouter.get('/loadCategory', verifyJWT, handleCategorySend);

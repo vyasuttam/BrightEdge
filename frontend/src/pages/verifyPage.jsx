@@ -51,7 +51,7 @@ function VerifyPage() {
             navigate('/login');
         }
         else{
-            navigate('/home');
+            navigate('/');
         }
 
 
