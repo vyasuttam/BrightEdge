@@ -191,7 +191,7 @@ const EditContentPage = () => {
         <h2 className="text-xl font-bold mb-4 text-gray-700">Already Created Content</h2>
         {content && content.length > 0 && content.map((content) => (
           <div key={content._id} className="border p-3 rounded flex items-center justify-between bg-gray-50 mb-3">
-            <div className="gap-4">
+            <div className="gap-4 w-11/12">
               <p className="font-semibold text-gray-700">Title : {content.content_name}</p>
               <p className="truncate">{content.content_media_type} : <span className="text-blue-600"><a href={`${content.content_url}`}>{content.content_url}</a></span></p>
             </div>

@@ -1,19 +1,11 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-
-const categoriesList = [
-  "Data Science",
-  "AI/ML",
-  "Web Development",
-  "Cybersecurity",
-  "Cloud Computing",
-  "Blockchain",
-  "Mobile App Development",
-];
 
 const CourseCategoryDropdown = ({ selectedCategories, setSelectedCategories }) => {
   
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [categoriesList, setCategoriesList] = useState([]);
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
@@ -22,6 +14,29 @@ const CourseCategoryDropdown = ({ selectedCategories, setSelectedCategories }) =
       prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
     );
   };
+
+  const loadCategory = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/course/loadCategory", {
+        withCredentials: true,
+      });
+
+      console.log(res);
+
+      if (res.data.categories) {
+        const categoryNames = res.data.categories.map((cat) => cat.category_name);
+        setCategoriesList(categoryNames);
+      } else {
+        console.error("No categories found");
+      }
+    } catch (error) {
+      console.error("Failed to load categories", error);
+    }
+  };
+
+  useEffect(() => {
+    loadCategory();
+  }, []);
 
   return (
     <div className="w-1/3 mt-5">

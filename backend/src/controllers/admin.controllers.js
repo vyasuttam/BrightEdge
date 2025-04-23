@@ -141,6 +141,11 @@ export const getUsers = async (req, res) => {
 
     const tempUserRoles = await userRoles.find({}).populate("user_id");
 
+    if(!tempUserRoles) {
+      return res.status(400).json({
+        message : "user not defined"
+      })
+    }
     // console.log(tempUserRoles);
 
     const formattedUsers = tempUserRoles.map((userRole) => ({

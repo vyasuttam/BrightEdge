@@ -15,10 +15,12 @@ export const MyCourses = () => {
         { withCredentials: true }
       );
       setCourses(response.data.data);
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
+
 
   useEffect(() => {
     getMyCourses();

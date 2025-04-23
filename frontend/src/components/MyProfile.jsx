@@ -62,7 +62,6 @@ export const MyProfile = () => {
     if (file) {
       const preview = URL.createObjectURL(file);
       setProfilePreview(preview);
-      // Here you'd send it to backend using FormData
     }
   };
 
@@ -109,28 +108,75 @@ export const MyProfile = () => {
             )}
           </div>
 
-          {[
-            { label: "Full Name", name: "full_name", type: "text", isEditable: true },
-            { label: "Role", name: "role", type: "text", isEditable: false },
-            { label: "Email", name: "email", type: "text", isEditable: false },
-            { label: "Work Experience", name: "work_experience", type: "text", isEditable: true },
-            { label: "Qualification Document", name: "qualification_doc", type: "file", isEditable: true }
-          ].map(({ label, name, type, isEditable }) => (
-            <div key={name}>
-              <label className="text-sm text-gray-500 block mb-1">{label}</label>
+          {/* Full Name */}
+          <div>
+            <label className="text-sm text-gray-500 block mb-1">Full Name</label>
+            {isEditing ? (
+              <input
+                type="text"
+                name="full_name"
+                value={user.full_name || ""}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            ) : (
+              <div className="bg-gray-100 px-4 py-3 rounded-xl text-gray-700 text-lg">
+                {user.full_name}
+              </div>
+            )}
+          </div>
 
-              {label === "Qualification Document" ? (
-                isEditing ? (
+          {/* Role */}
+          <div>
+            <label className="text-sm text-gray-500 block mb-1">Role</label>
+            <div className="bg-gray-100 px-4 py-3 rounded-xl text-gray-700 text-lg">
+              {user.role}
+            </div>
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="text-sm text-gray-500 block mb-1">Email</label>
+            <div className="bg-gray-100 px-4 py-3 rounded-xl text-gray-700 text-lg">
+              {user.email}
+            </div>
+          </div>
+
+          {/* Conditional Instructor-only fields */}
+          {user.role === "instructor" && (
+            <>
+              {/* Work Experience */}
+              <div>
+                <label className="text-sm text-gray-500 block mb-1">Work Experience</label>
+                {isEditing ? (
                   <input
-                    type="file"
-                    name={name}
+                    type="text"
+                    name="work_experience"
+                    value={user.work_experience || ""}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 ) : (
-                  user[name] ? (
+                  <div className="bg-gray-100 px-4 py-3 rounded-xl text-gray-700 text-lg">
+                    {user.work_experience}
+                  </div>
+                )}
+              </div>
+
+              {/* Qualification Document */}
+              <div>
+                <label className="text-sm text-gray-500 block mb-1">Qualification Document</label>
+                {isEditing ? (
+                  <input
+                    type="file"
+                    name="qualification_doc"
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                ) : (
+                  user.qualification_doc ? (
                     <a
-                      href={user[name]}
+                      href={user.qualification_doc}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 underline"
@@ -140,24 +186,10 @@ export const MyProfile = () => {
                   ) : (
                     <div className="text-gray-500">No document uploaded</div>
                   )
-                )
-              ) : (
-                isEditing && isEditable ? (
-                  <input
-                    type={type}
-                    name={name}
-                    value={user[name]}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                ) : (
-                  <div className="bg-gray-100 px-4 py-3 rounded-xl text-gray-700 text-lg">
-                    {user[name]}
-                  </div>
-                )
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Divider */}
@@ -165,7 +197,6 @@ export const MyProfile = () => {
 
         {/* Actions */}
         <div className="flex flex-col md:flex-row gap-10">
-          {/* Action Buttons */}
           <div className="flex-1 space-y-5">
             <button
               className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition"
@@ -176,7 +207,6 @@ export const MyProfile = () => {
           </div>
         </div>
 
-        {/* Change Password Modal */}
         {isChangePassword && (
           <ChangePasswordModal setIsChangePassword={setIsChangePassword} />
         )}

@@ -83,9 +83,10 @@ export default function AdminCourses() {
                 <td className="p-4 text-center">{course.content_count}</td>
                 <td className="p-4">{new Date(course.createdAt).toLocaleDateString()}</td>
                 <td className="p-4 text-center space-x-2">
-                  <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                {/*  <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                     <Eye size={16} />
                   </button>
+                */}
                   <button onClick={() => handleDelete(course._id)} className="p-2 bg-red-500 text-white rounded hover:bg-red-600">
                     <Trash2 size={16} />
                   </button>

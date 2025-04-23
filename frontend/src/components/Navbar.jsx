@@ -167,7 +167,7 @@ export const Navbar = () => {
             ) : (
               <div>
                 <Link to={'/login'}>
-                  <button className='p-2 bg-white text-blue-600 rounded-sm px-6 py-2'>Login</button>
+                  <button className='p-2 bg-blue-600 text-white rounded-full px-6 py-2'>Login</button>
                 </Link>
               </div>
             )

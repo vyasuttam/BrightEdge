@@ -20,10 +20,10 @@ examRouter.get("/user-exam-status/:examId", verifyJWT, isExamStarted);
 
 examRouter.post("/enroll-exam", verifyJWT, enrollInExam);
 examRouter.get("/get-enrolled-exam", verifyJWT, getEnrolledExams);
-examRouter.post("/get-enrolled-exam-login", verifyJWT, handleEnrolledExamLogin);
+examRouter.post("/get-enrolled-exam-login", verifyJWT, handleEnrolledExamLogin); // when user login into exam
 
-examRouter.get("/get-user-completed-exams", verifyJWT, getExamResult);
-examRouter.get("/get-user-pending-exams", verifyJWT, getExamResult);
+examRouter.get("/get-user-completed-exams", verifyJWT, getExamResult); //temp
+examRouter.get("/get-user-pending-exams", verifyJWT, getExamResult); //temp
 
 examRouter.post("/submit-exam", verifyJWT, submitAnswers);
 examRouter.post("/get-exam-result", verifyJWT, getExamResult);

@@ -44,7 +44,7 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-gradient-to-b from-blue-700 to-blue-900 text-white flex flex-col p-6 shadow-lg min-h-screen">
+    <aside className="w-64 bg-gradient-to-b from-blue-700 to-blue-900 text-white flex flex-col p-6 shadow-lg h-screen">
       <h1 className="text-2xl font-bold mb-8 text-center">Admin Panel</h1>
       
       <nav className="space-y-3 flex-1">
