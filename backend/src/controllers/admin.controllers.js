@@ -205,9 +205,13 @@ export const deleteUser = async (req, res) => {
     
       // Delete course
       await courses.deleteOne({ _id: course._id });
-      await UserProgress.deleteMany({ course_id : course._id })
+      await UserProgress.deleteMany({ course_id : course._id });
+
+      await Enrollment.deleteMany({
+        course_id : course._id
+      });
     }
-    
+
     await Enrollment.deleteMany({
       student_id : user_id
     });
@@ -217,28 +221,28 @@ export const deleteUser = async (req, res) => {
     });
 
 
-  for(const exam of instructor_exams) {
+    for(const exam of instructor_exams) {
 
-    await Question.deleteMany({
-      exam_id: exam._id
-    });
+      await Question.deleteMany({
+        exam_id: exam._id
+      });
 
-    await UserAnswers.deleteMany({
-      exam_id : exam._id
-    });
+      await UserAnswers.deleteMany({
+        exam_id : exam._id
+      });
 
-    await ExamResult.deleteMany({
-      exam_id : exam._id
-    });
+      await ExamResult.deleteMany({
+        exam_id : exam._id
+      });
 
-    await ExamEnrollment.deleteMany({
-      exam_id : exam._id
-    });
+      await ExamEnrollment.deleteMany({
+        exam_id : exam._id
+      });
 
-    await Exam.deleteOne({
-      _id : exam._id
-    });
-  }
+      await Exam.deleteOne({
+        _id : exam._id
+      });
+    }
 
     return res.status(200).json({
       sucess: true,
@@ -309,5 +313,39 @@ export const adminAuth = async (req, res) => {
       message: "this is errorr"
     });
   }
+
+}
+
+export const deleteExamAdmin = async (req, res) => {
+
+    try {
+        
+        const { examId : exam_id } = req.params;
+
+      console.log(exam_id);
+
+        console.log("called admin delete");
+
+        // const currentTime = new Date();
+        // const examStartTime = new Date(examObj.exam_start_time);
+        // const duration = examObj.exam_duration * 60 * 1000; // Convert duration to milliseconds
+
+        // if ((currentTime >= examStartTime) && (currentTime <= examStartTime + duration)) {
+        //     return res.status(400).json({ success: false, message: 'Exam already started' });
+        // }  
+    
+        await Exam.deleteOne({ _id: exam_id });
+        await Question.deleteMany({ exam_id: exam_id });
+        await UserAnswers.deleteMany({ exam_id: exam_id });
+        await ExamResult.deleteMany({ exam_id: exam_id });
+        await ExamEnrollment.deleteMany({ exam_id: exam_id });  
+
+
+        return res.status(200).json({ success: true, message: 'Exam deleted successfully' });
+
+    } catch (error) {
+        console.error('Error deleting exam:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
 
 }

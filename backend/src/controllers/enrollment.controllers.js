@@ -46,16 +46,20 @@ export const getEnrolledCourses = async (req, res) => {
             student_id: req.user_id
         });
 
-        // console.log(userEnrolledCourses);
+        console.log(userEnrolledCourses);
 
         // Use Promise.all with map for async handling
-        const enrolledCourses = await Promise.all(
+        let enrolledCourses = await Promise.all(
             userEnrolledCourses.map(async (enrolledCourse) => {
                 return await courses.findOne({ _id: enrolledCourse.course_id }).populate("instructor_id"); // Use `findOne` instead of `find`
             })
         );
 
-        // console.log(enrolledCourses);
+        console.log(enrolledCourses);
+ 
+        if(enrolledCourses) {
+            enrolledCourses = [];
+        }
 
         return res.status(200).json({
             status: true,

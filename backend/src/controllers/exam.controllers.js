@@ -531,6 +531,7 @@ export const updateExam = async (req, res) => {
 export const deleteExam = async (req, res) => {
 
     try {
+        
         const { examId : exam_id } = req.params;
         const user_id = req.user_id;
 
@@ -546,7 +547,6 @@ export const deleteExam = async (req, res) => {
         if ((currentTime >= examStartTime) && (currentTime <= examStartTime + duration)) {
             return res.status(400).json({ success: false, message: 'Exam already started' });
         }  
-        
     
         await Exam.deleteOne({ _id: exam_id });
         await Question.deleteMany({ exam_id: exam_id });

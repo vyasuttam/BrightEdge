@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Eye, Trash2 } from "lucide-react";
 import { AdminContext } from "../../../context/AdminContext";
+import { toast } from "react-toastify";
 
 export default function AdminExams() {
   const [exams, setExams] = useState([]);
@@ -23,6 +24,34 @@ export default function AdminExams() {
       console.error(error);
     }
   };
+
+  const handleDeleteCall = async (exam_id) => {
+
+    try
+    {
+      const res = await axios.get(`http://localhost:8080/api/admin/deleteExam/${exam_id}`, {
+        headers : {
+          Authorization : `Bearer ${getTokenFromLocal()}`
+        },
+        withCredentials: true
+      });
+
+      if(res.data.success) {  
+
+        let tempExams = exams.filter((exam) => {
+          return exam_id != exam._id
+        });
+  
+        setExams(tempExams);  
+
+        toast.success("exam deleted");
+      }
+    }
+    catch(error)
+    {
+      toast.error(error.message || "something went wrong");
+    } 
+  }
 
   useEffect(() => {
     fetchExams();
@@ -60,7 +89,9 @@ export default function AdminExams() {
                 <td className="p-4 text-center">{exam.passing_marks}</td>
                 <td className="p-4">{new Date(exam.createdAt).toLocaleDateString()}</td>
                 <td className="p-4 text-center space-x-2">
-                  <button className="p-2 bg-red-500 text-white rounded hover:bg-red-600">
+                  <button className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
+                    onClick={() => handleDeleteCall(exam._id)}
+                  >
                     <Trash2 size={16} />
                   </button>
                 </td>
