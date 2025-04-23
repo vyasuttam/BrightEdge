@@ -3,9 +3,11 @@ import bcrypt from 'bcrypt';
 import { generateAccessToken } from "./user.controllers.js";
 import { user, userRoles } from "../models/user.model.js";
 import { courses } from "../models/course.model.js";
-import { Exam } from "../models/exam.model.js"
+import { Exam, ExamEnrollment, ExamResult, Question, UserAnswers } from "../models/exam.model.js"
 import jwt from "jsonwebtoken";
 import { UserProgress } from "../models/progress.model.js";
+import { Enrollment } from "../models/enrollment.model.js";
+import { Section, Section_content } from "../models/section.model.js";
 
 export const adminlogin = async (req, res) => {
   try {
@@ -182,6 +184,56 @@ export const deleteUser = async (req, res) => {
     await userRoles.deleteOne({
       user_id: user_id
     });
+
+    const instructor_courses = await courses.find({ instructor_id: user_id });
+
+    for (const course of instructor_courses) {
+      const sections = await Section.find({ course_id: course._id });
+    
+      for (const section of sections) {
+        // Delete section content
+        await Section_content.deleteMany({ section_id: section._id });
+      }
+    
+      // Delete sections
+      await Section.deleteMany({ course_id: course._id });
+    
+      // Delete course
+      await courses.deleteOne({ _id: course._id });
+      await UserProgress.deleteMany({ course_id : course._id })
+    }
+    
+    await Enrollment.deleteMany({
+      student_id : user_id
+    });
+
+    const instructor_exams = await Exam.find({
+      user_id : user_id
+    });
+
+
+  for(const exam of instructor_exams) {
+
+    await Question.deleteMany({
+      exam_id: exam._id
+    });
+
+    await UserAnswers.deleteMany({
+      exam_id : exam._id
+    });
+
+    await ExamResult.deleteMany({
+      exam_id : exam._id
+    });
+
+    await ExamEnrollment.deleteMany({
+      exam_id : exam._id
+    });
+
+    await Exam.deleteOne({
+      _id : exam._id
+    });
+  }
 
     return res.status(200).json({
       sucess: true,
