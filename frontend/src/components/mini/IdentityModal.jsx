@@ -99,7 +99,7 @@ export default function IdentityModal({ aadharNumber, setAadharNumber, setIsOpen
               {qualificationFile ? (
                 <p className="text-sm text-gray-700 font-medium">{qualificationFile.name}</p>
               ) : (
-                <p className="text-sm text-gray-500">Click to upload or drag & drop your file here</p>
+                <p className="text-sm text-gray-500">Click to upload your file here</p>
               )}
               <input
                 id="fileUpload"

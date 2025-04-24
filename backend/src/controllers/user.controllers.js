@@ -713,7 +713,7 @@ export const getUserStats = async (req, res) => {
                 }
               ]);
               
-              console.log(courseStats);
+            //   console.log(courseStats);
 
               
               totalExamCount = await Exam.countDocuments({

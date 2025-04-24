@@ -23,6 +23,8 @@ const CourseCreationForm = () => {
     price:0,
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleThumbnailChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -46,6 +48,8 @@ const CourseCreationForm = () => {
   const handleCreate = async () => {
 
     console.log(courseData);
+
+    setLoading(true);
 
     try
     { 
@@ -74,13 +78,16 @@ const CourseCreationForm = () => {
         });
         
         toast.success("Course Created Successfully");
-        
 
         console.log(res.data);
     }
     catch(error)
     {
+      toast.warning(error.response.data.message || "something went wrong")
       console.log(error);
+    }
+    finally {
+      setLoading(false);
     }
 
   };
@@ -92,6 +99,12 @@ const CourseCreationForm = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
+        {loading && (
+          <div className="absolute inset-0 bg-white bg-opacity-80 z-50 flex flex-col items-center justify-center">
+            <div className="w-10 h-10 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+            <p className="mt-2 text-sm font-semibold text-blue-600">Creating...</p>
+          </div>
+        )}
       <div className="flex-1 p-8 bg-white w-full relative">
         <button onClick={handleClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
           <FaTimes size={20} />
@@ -102,7 +115,7 @@ const CourseCreationForm = () => {
             <Input placeholder="Course Title" value={courseData.title} onChange={(e) => setCourseData({ ...courseData, course_title: e.target.value })} className="w-full" />
             <Textarea placeholder="Course Description" value={courseData.description} onChange={(e) => setCourseData({ ...courseData, course_desc: e.target.value })} className="w-full" />
             
-            <Input placeholder="₹ aPrice" value={courseData.title} onChange={(e) => setCourseData({ ...courseData, price: e.target.value })} className="w-50" />
+            <Input placeholder="₹ Price" value={courseData.title} onChange={(e) => setCourseData({ ...courseData, price: e.target.value })} className="w-50" />
 
             <CourseCategoryDropdown selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories}/>
             <div className="space-y-2">

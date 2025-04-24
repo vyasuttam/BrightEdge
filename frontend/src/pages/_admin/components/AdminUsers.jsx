@@ -103,7 +103,6 @@ export default function AdminUsers() {
             <th className="p-4">Name</th>
             <th className="p-4">Email</th>
             <th className="p-4">Qualification</th>
-            <th className="p-4">Experience</th>
             <th className="p-4">Identity No.</th>
             <th className="p-4 text-center">Actions</th>
           </tr>
@@ -125,7 +124,6 @@ export default function AdminUsers() {
                     )
                 }
               </td>
-              <td className="p-4">{user.experience ? user.experience : "No Details" }</td>
               <td className="p-4">{user.identityNumber}</td>
               <td className="p-4 text-center space-x-2">
                 <button onClick={() => handleDelete(user._id)} className="p-2 bg-red-500 text-white rounded hover:bg-red-600">

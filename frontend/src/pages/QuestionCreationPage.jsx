@@ -102,11 +102,11 @@ export const QuestionCreationPage = () => {
   };
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this question?");
-    if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:8080/api/question/delete/${id}`);
+      await axios.get(`http://localhost:8080/api/exam/deleteQuestion/${id}`, {
+        withCredentials : true
+      });
       toast.success("Question deleted.");
       fetchQuestions();
     } catch (err) {

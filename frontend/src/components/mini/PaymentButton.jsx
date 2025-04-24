@@ -27,7 +27,13 @@ export const PaymentButton = ({ setIsEnrolled }) => {
                 withCredentials : true
             });
 
-            console.log("failed after backend call")
+            if(data.amount == 0) {
+                toast.success(data.message);
+                setIsEnrolled(true);
+                return ;
+            }
+
+            // console.log("failed after backend call")
 
             console.log(data, import.meta.env.VITE_APP_RAZORPAY_KEY_ID);
 

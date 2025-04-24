@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { verifyJWT } from '../middleware/verifyJWT.js';
 import { addCouse, deleteCourse, getCourseEnrollmentInfo, getInstructorCourses, updateCourse } from '../controllers/course.controllers.js';
-import { addSection, getSectionData } from '../controllers/section.controllers.js';
+import { addSection, deleteSection, getSectionData } from '../controllers/section.controllers.js';
 import { addSectionContent, deleteContent, getSectionContent } from '../controllers/sec_content.controllers.js';
 import { upload } from '../middleware/multer.js';
 import { requireInstructorRole } from '../middleware/instructorRole.js';
@@ -29,6 +29,9 @@ instructorRouter.post('/getSections', verifyJWT, requireInstructorRole, getSecti
 
 instructorRouter.post('/addSectionContent', verifyJWT, requireInstructorRole, upload.single('content_asset'), addSectionContent);
 instructorRouter.post('/getSectionContent', verifyJWT, requireInstructorRole, getSectionContent);
+
+instructorRouter.get('/deleteSection/:sectionId', verifyJWT, requireInstructorRole, deleteSection)
+
 instructorRouter.get("/deleteSectionContent/:content_id", verifyJWT, requireInstructorRole, deleteContent);
 
 instructorRouter.get('/getCourseEnrollments', verifyJWT, requireInstructorRole, getCourseEnrollmentInfo);

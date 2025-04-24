@@ -256,11 +256,7 @@ function App() {
                       path='/reset-password'   
                       element={
                         <AuthProvider>
-
-
-                      <ProtectedRoute>
                           <ForgetPasswordPage />
-                      </ProtectedRoute>
                         </AuthProvider>
                     } />
                     <Route

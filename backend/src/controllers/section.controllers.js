@@ -1,4 +1,4 @@
-import { Section } from "../models/section.model.js";
+import { Section, Section_content } from "../models/section.model.js";
 
 export async function addSection(req, res) {
 
@@ -110,6 +110,42 @@ export const getSectionData = async (req, res) => {
     catch(error)
     {
         return res.status(400).json(error.message);
+    }
+
+}
+
+export const deleteSection = async (req, res) => {
+
+    try {
+        
+        const { sectionId } = req.params;
+
+        console.log(sectionId);
+
+        if(!sectionId) {
+            return res.status(400).json({
+                message : "invalid section selected"
+            })
+        }
+
+        await Section_content.deleteMany({
+            section_id : sectionId
+        });
+
+        await Section.deleteOne({
+            _id : sectionId
+        });
+
+        return res.status(200).json({
+            success : true,
+            message: "section deleted success"
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message : "something went wrong from backend"
+        })
     }
 
 }

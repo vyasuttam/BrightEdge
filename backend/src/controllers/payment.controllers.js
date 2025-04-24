@@ -24,6 +24,29 @@ export const createPaymentHandler = async (req, res) => {
             throw new Error("course doesn't exist");
         }
 
+        if(courseDetails.price === 0) {
+
+            await Order.create({
+                _id : Math.random().toString(), 
+                user_id : req.user_id,
+                course_id,
+                amount : courseDetails.price,
+                status: "CREATED",
+            });
+
+            await Enrollment.create({
+                course_id: course_id,
+                student_id : req.user_id,
+                payment_id : "freePayment"
+            })
+
+            return res.status(200).json({
+                amount : 0,
+                message : "free enrollment done",
+                success : true
+            });
+        }
+
         const options = {
             amount : courseDetails.price * 100
         }

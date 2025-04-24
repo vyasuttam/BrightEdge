@@ -40,7 +40,7 @@ export const Home = () => {
       <div className="text-center mt-16">
         <h1 className="text-4xl font-bold text-gray-900">✨ Featured Courses</h1>
         <p className="text-lg mt-4 text-gray-600 max-w-2xl mx-auto">
-          Learning often happens in classrooms but it doesn’t have to. Use Eduflow to facilitate learning experiences no matter the context.
+          Learning often happens in classrooms but it doesn’t have to. Use BrightEdge to facilitate learning experiences no matter the context.
         </p>
       </div>
       <div>

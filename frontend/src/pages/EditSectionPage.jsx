@@ -20,8 +20,25 @@ const EditSectionPage = () => {
   };
 
   // Remove section
-  const removeSection = (sectionId) => {
-    setSections(sections.filter((section) => section.id !== sectionId));
+  const removeSection = async (sectionId) => {
+
+    try
+    {
+      const res = await axios.get(`http://localhost:8080/api/instructor/deleteSection/${sectionId}`, {
+        withCredentials: true,
+      });
+
+      if(res.data.success) {
+        setSections(sections.filter((section) => section._id !== sectionId));
+        toast.success("section deletion success");
+      }
+      
+    }
+    catch(error) {
+      toast.error(error.response.data.message || error.message || "something went wrong")
+      console.log(error);
+    }
+
   };
 
   const getSections = async () => {
@@ -110,7 +127,7 @@ const EditSectionPage = () => {
                     <Button className="bg-green-500 text-white px-3 py-1 rounded">Edit</Button>
                   </Link>
                   {/* Delete Button */}
-                  <Button onClick={() => removeSection(section.id)} className="bg-red-500 text-white px-3 py-1 rounded">
+                  <Button onClick={() => removeSection(section._id)} className="bg-red-500 text-white px-3 py-1 rounded">
                     <FaTrash />
                   </Button>
                 </div>

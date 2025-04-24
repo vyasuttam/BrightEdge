@@ -36,7 +36,7 @@ export default function Footer() {
       </div>
 
       <div className="mt-10 text-center text-sm border-t border-gray-700 pt-5">
-        © {new Date().getFullYear()} Eduflow. All rights reserved.
+        © {new Date().getFullYear()} BrightEdge. All rights reserved.
       </div>
     </footer>
   )

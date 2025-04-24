@@ -84,6 +84,9 @@ const EditContentPage = () => {
 
       setNewContent({ title: "", type: "video", source: "", isFileUpload: false });
     }
+    else {
+      toast.warning("provide all information")
+    }
 
     setLoading(false);
   };
@@ -163,7 +166,7 @@ const EditContentPage = () => {
           {newContent.isFileUpload ? (
             <input
               type="file"
-              accept="video/*,.pdf"
+              accept={ newContent.type == "video" ? "video/*" : ".pdf" }
               className="p-3 border rounded w-full"
               onChange={(e) => handleFileUpload(e.target.files[0])}
             />

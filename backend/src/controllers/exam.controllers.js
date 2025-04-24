@@ -32,9 +32,11 @@ export const getAllExams = async (req, res) => {
 
     try {
 
-        const exams = await Exam.find({}).populate('user_id');
+        let exams = await Exam.find({}).populate('user_id');
 
-        res.status(200).json({ success: true, exams });
+        // console.log(exams);
+
+        return res.status(200).json({ success: true, exams });
 
     } catch (error) {
         console.error('Error creating exam:', error);
@@ -120,7 +122,7 @@ export const getAllQuestions = async (req, res) => {
             _id: exam_id,
         });
 
-        console.log(examObj);
+        // console.log(examObj);
         
         let questions = [];
 
@@ -175,8 +177,8 @@ export const submitAnswers = async (req, res) => {
         const { exam_id, answers } = req.body;
         const user_id = req.user_id;
 
-        console.log("------------------------------------");
-        console.log(typeof answers);
+        // console.log("------------------------------------");
+        // console.log(typeof answers);
 
         const isUserAlreadySubmitted = await ExamResult.findOne({
             user_id: user_id,
@@ -206,7 +208,7 @@ export const submitAnswers = async (req, res) => {
             }
         }
 
-        console.log("correct answers = ", correctAnswers);
+        // console.log("correct answers = ", correctAnswers);
 
         const examObj = await Exam.findOne({
             _id: exam_id
@@ -251,7 +253,7 @@ export const getExamResult = async (req, res) => {
         _id: examResultDoc.exam_id.user_id,
       }).select('full_name');
 
-      console.log("conductedBy = ", conductedBy);
+    //   console.log("conductedBy = ", conductedBy);
 
       const examResultObj = examResultDoc.toObject(); // Convert Mongoose document to plain object
       examResultObj.conducted_by = conductedBy;
@@ -442,6 +444,8 @@ export const getEnrolledExams = async (req, res) => {
             },
           });
 
+        //   console.log(enrolledExams);
+
         const enrolledWithStatus = await Promise.all(
 
             enrolledExams.map(async (enrollment) => {
@@ -501,7 +505,7 @@ export const updateExam = async (req, res) => {
         const user_id = req.user_id;
         const { examId : exam_id } = req.params;
 
-        console.log(exam_start_time);   
+        // console.log(exam_start_time);   
 
         const examObj = await Exam.findOneAndUpdate({
             _id: exam_id,
@@ -517,7 +521,7 @@ export const updateExam = async (req, res) => {
             new: true,
         });
 
-        console.log("examObj = ", examObj);
+        // console.log("examObj = ", examObj);
 
         res.status(200).json({ success: true, examObj });
 
@@ -574,7 +578,7 @@ export const submissionInfo = async (req, res) => {
         }).populate('user_id');
 
         if (!submissionInfo) {
-            return res.status(404).json({ success: false, message: 'Submission not found' });
+            return res.status(400).json({ success: false, message: 'Submission not found' });
         }
 
         return res.status(200).json({ success: true, submissionInfo });
@@ -582,6 +586,28 @@ export const submissionInfo = async (req, res) => {
     } catch (error) {
         console.error('Error fetching submission info:', error);
         return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+
+}
+
+export const deleteExamQuestion = async (req, res) => {
+
+    try {
+        
+        const { questionId } = req.params;
+
+        if(!questionId) {
+            return res.status(400).json({ success: false, message: "question id isn't valid" });
+        }
+
+        await Question.deleteOne({
+            _id : questionId
+        });
+
+        return res.status(200).json({ success: true, message: "question deleted successfully" });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message : error.message || "something went wrong from backend" });
     }
 
 }

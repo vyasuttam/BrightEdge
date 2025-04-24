@@ -136,7 +136,7 @@ export const Navbar = () => {
 
           {/* Profile Menu */}
           {
-            user ? (
+            !loading && user ? (
             <div className="relative">
               <div className="cursor-pointer" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 {user && user.profile_url ? (

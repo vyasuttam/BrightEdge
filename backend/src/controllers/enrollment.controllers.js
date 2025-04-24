@@ -46,7 +46,7 @@ export const getEnrolledCourses = async (req, res) => {
             student_id: req.user_id
         });
 
-        console.log(userEnrolledCourses);
+        // console.log(userEnrolledCourses);
 
         // Use Promise.all with map for async handling
         let enrolledCourses = await Promise.all(
@@ -55,9 +55,9 @@ export const getEnrolledCourses = async (req, res) => {
             })
         );
 
-        console.log(enrolledCourses);
+        // console.log(enrolledCourses);
  
-        if(enrolledCourses) {
+        if(enrolledCourses[0] == null) {
             enrolledCourses = [];
         }
 

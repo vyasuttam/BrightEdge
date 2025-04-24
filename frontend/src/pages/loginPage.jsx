@@ -56,7 +56,7 @@ export const LoginPage = () => {
       setUser(response.data.userData);
       router('/');
     } catch (error) {
-      toast.warning(error.message);
+      toast.warning(error.response.data.error.message || error.message);
       console.log(error);
     }
   };

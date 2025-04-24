@@ -31,6 +31,7 @@ export const AvatarSidebar = ({ profile_url }) => {
             
             if (response.status === 200) {
                 toast.success("Profile Uploaded success");
+
                 setIsOpen(false);
             }
         } catch (error) {
@@ -81,7 +82,7 @@ export const AvatarSidebar = ({ profile_url }) => {
                   d="M7 16V12a5 5 0 0110 0v4M5 16h14a2 2 0 002-2V9a2 2 0 00-2-2h-4.586a1 1 0 01-.707-.293l-2.414-2.414a1 1 0 00-1.414 0L8.293 6.707A1 1 0 017.586 7H5a2 2 0 00-2 2v5a2 2 0 002 2z"
                 ></path>
               </svg>
-              <p className="text-gray-500">Click to upload or drag and drop</p>
+              <p className="text-gray-500">Click to upload</p>
               <input
                 id="file-upload"
                 type="file"

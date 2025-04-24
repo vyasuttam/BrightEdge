@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { verifyJWT } from "../middleware/verifyJWT.js";
 import { requireInstructorRole } from "../middleware/instructorRole.js";
-import { createExam, getAllExams, addQuestion, getAllQuestions, getExamResult, submitAnswers, getConductorExams, updateQuestion, getExamData, isExamStarted, enrollInExam, getEnrolledExams, deleteExam, updateExam, submissionInfo, handleEnrolledExamLogin } from "../controllers/exam.controllers.js";
+import { createExam, getAllExams, addQuestion, getAllQuestions, getExamResult, submitAnswers, getConductorExams, updateQuestion, getExamData, isExamStarted, enrollInExam, getEnrolledExams, deleteExam, updateExam, submissionInfo, handleEnrolledExamLogin, deleteExamQuestion } from "../controllers/exam.controllers.js";
 
 export const examRouter = Router();
 
@@ -12,6 +12,7 @@ examRouter.get("/get-my-exams", verifyJWT, getConductorExams);
 examRouter.post("/add-question", verifyJWT, requireInstructorRole, addQuestion);
 examRouter.post("/get-questions", verifyJWT, getAllQuestions);
 examRouter.put("/update-exam-question", verifyJWT, updateQuestion);
+examRouter.get("/deleteQuestion/:questionId", verifyJWT, deleteExamQuestion)
 
 // examRouter.get("/get-upcoming-exams", verifyJWT, getUpcomingExams);
 // examRouter.get("/get-completed-exams", verifyJWT, getPastExams);

@@ -168,8 +168,12 @@ export const deleteContent = async (req, res) => {
             _id : content_id
         });
 
+        const SectionObj = await Section.findOne({
+            _id : contentObj.section_id
+        });
+
         await courses.updateOne({
-            _id : contentObj.course_id
+            _id : SectionObj.course_id
         }, {
             $inc : {
                 content_count : -1

@@ -9,8 +9,8 @@ import { Section, Section_content } from '../models/section.model.js';
 const courseSchema = z.object({
     course_title: z.string().min(5, "course name must be of length 5").max(50, "course name must be of length 50"),
     course_desc: z.string().min(5, "course description must be of length 5").max(500, "course description must be of length 500"),
-    course_thumbnail: z.string(),
-    course_intro: z.string(),
+    course_thumbnail: z.string("please provide thumbnail"),
+    course_intro: z.string("please provide intro video"),
     categories: z.array(z.string()).min(1, "atleast one category is required"),
     price: z.number().nonnegative("price must be a positive number"),
 });
@@ -27,6 +27,12 @@ export async function addCouse(req, res) {
         console.log(req.body);
 
         console.log('data got');
+
+        if(!course_thumbnail || !course_intro) {
+            return res.status(400).json({
+                message : "please provide all details(name, thumbnail & intro video, etc)"
+            });
+        }
 
         const courseData = courseSchema.safeParse({
             course_title,
@@ -73,8 +79,7 @@ export async function addCouse(req, res) {
     }
     catch(error){
         return res.status(400).json({
-            error:error.message,
-            message: "this is errorr"
+            message: error.message
         });
     }
 
@@ -284,7 +289,7 @@ export async function getCourseData(req, res) {
         courseData[0].instructor_email = userData.instructor_id.email;
         courseData[0].instructor_profile = userData.instructor_id.profile_url;
 
-        console.log(userData);
+        // console.log(userData);
 
           console.log("done aggregation");
 
@@ -527,6 +532,10 @@ export const deleteCourse = async (req, res) => {
 
         await courses.deleteOne({
             _id : course_id
+        });
+
+        await Enrollment.deleteMany({
+            course_id : course_id
         });
 
         return res.status(200).json({

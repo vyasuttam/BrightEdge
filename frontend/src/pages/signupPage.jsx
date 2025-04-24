@@ -53,7 +53,7 @@ export const SignupPage = () => {
         router('/verifyPage', { state: { email: formData.email, origin: 'signup' } });
       }
     } catch (error) {
-      toast.error("something went wrong");
+      toast.error(error.response.data.message || "something went wrong");
       console.log(error);
     }
   };

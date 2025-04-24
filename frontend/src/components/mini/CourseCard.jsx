@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function CourseCard({
   course = {},
@@ -15,10 +17,21 @@ export default function CourseCard({
   console.log(course);
   console.log(course.instructor_name, course.instructor_id.full_name);
 
-  const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this course?")) {
-      onDelete(course._id);
+  const handleDelete = async (courseId) => {
+
+    try {
+      
+      const res = await axios.get(`http://localhost:8080/api/instructor/deleteCourse?course_id=${courseId}`, {
+        withCredentials : true
+      });
+
+      toast.success("course deleted successfully");
+
+    } catch (error) {
+      console.log(error);
+      toast.error("error while deleting! please try again");
     }
+
   };
 
   return (
@@ -36,7 +49,7 @@ export default function CourseCard({
             </button>
           </Link>
           <button
-            onClick={handleDelete}
+            onClick={() => handleDelete(course._id)}
             className="p-2 bg-white border border-gray-200 rounded-full shadow-sm hover:text-red-600 hover:shadow-md transition"
             title="Delete"
           >
