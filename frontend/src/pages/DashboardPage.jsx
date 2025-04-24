@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import IdentityModal from "../components/mini/IdentityModal.jsx";
 import { FaTachometerAlt, FaUser, FaBookOpen, FaClipboardList, FaChalkboardTeacher, FaBook, FaClipboardCheck, FaUserGraduate, FaUsers, FaMoneyBillWave } from "react-icons/fa";
 import { MdLock } from "react-icons/md";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const DashboardPage = () => {
   const [option, setOption] = useState(localStorage.getItem('lastSelectedTab') || "dashboard");
@@ -18,6 +20,26 @@ const DashboardPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [aadharNumber, setAadharNumber] = useState("");
+
+  const handleLogout = async () => {
+
+    try {
+      
+      const res = await axios.get("http://localhost:8080/api/user/logout", {
+        withCredentials : true
+      });
+
+      if(res.data.status == 200) {
+        toast.success("logout successfull");
+        navigate("/login")
+      }
+
+    } catch (error) {
+      console.log(error);
+      toast.error("error while logging out");
+    }
+
+  }
 
   // Persist last selected tab in localStorage
   useEffect(() => {
@@ -125,7 +147,7 @@ const DashboardPage = () => {
           </button>
 
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => handleLogout()}
             className="w-full p-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition"
           >
             Logout
