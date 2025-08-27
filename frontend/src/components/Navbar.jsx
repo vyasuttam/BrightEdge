@@ -28,11 +28,11 @@ export const Navbar = () => {
   const { user, loading } = useContext(AuthContext);
 
   const courses = [
-    'React Basics',
-    'Advanced JavaScript',
-    'Node.js Mastery',
-    'Python for Beginners',
-    'Data Structures & Algorithms',
+    // 'React Basics',
+    // 'Advanced JavaScript',
+    // 'Node.js Mastery',
+    // 'Python for Beginners',
+    // 'Data Structures & Algorithms',
   ];
 
   const handleSearchChange = (e) => {
